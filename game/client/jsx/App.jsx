@@ -436,7 +436,13 @@ export default class App extends React.Component {
         } else if (phase === 'pre-roll') {
             actionText = isMyTurn ? 'YOUR TURN - BUILD OR ROLL!' : 'Deciding...';
             actionClass = isMyTurn ? 'action-needed' : '';
-        } else if (phase === 'rolling' || phase === 'moving') {
+        } else if (phase === 'rolling') {
+            // 'rolling' does NOT mean the dice are moving -- it means the server
+            // is WAITING for this player to roll. Labelling it "Rolling..." made
+            // the game look frozen. 'moving' is the real animation phase.
+            actionText = isMyTurn ? 'CLICK THE DICE TO ROLL' : 'Waiting to roll...';
+            actionClass = isMyTurn ? 'action-needed' : '';
+        } else if (phase === 'moving') {
             actionText = 'Rolling...';
             actionClass = 'rolling';
         } else if (phase === 'action') {
@@ -965,10 +971,15 @@ class TradeModal extends React.Component {
 
     getAllDeeds = (ownerId) => {
         const game = this.props.game;
+        // Server sends deeds as {regular, trainStations, utilities}.
+        // These were previously read as `railroad` / `utility`, which are
+        // undefined -- calling .filter() on them threw and unmounted the app.
+        const deeds = (game && game.deeds) || {};
+        const owned = (list) => (list || []).filter(d => d.owner === ownerId);
         return [
-            ...game.deeds.regular.filter(d => d.owner === ownerId),
-            ...game.deeds.railroad.filter(d => d.owner === ownerId),
-            ...game.deeds.utility.filter(d => d.owner === ownerId)
+            ...owned(deeds.regular),
+            ...owned(deeds.trainStations),
+            ...owned(deeds.utilities)
         ];
     }
 

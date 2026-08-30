@@ -1,5 +1,10 @@
 import React from 'react';
 import { render } from 'react-dom';
 import App from './App';
+import ErrorBoundary from './ErrorBoundary';
 
-render((<App/>), document.getElementById('app'));
+render((
+    <ErrorBoundary>
+        <App/>
+    </ErrorBoundary>
+), document.getElementById('app'));

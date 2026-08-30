@@ -2000,6 +2000,12 @@ class GameService {
         const player = this.getPlayerFromId(playerId);
         this.sendLog(player.name + " is ready to roll!");
         this.sendToWs();
+
+        // Previously the turn stopped here and waited for a SECOND client
+        // message before the dice actually rolled, while the UI already showed
+        // "Rolling...". That read as a frozen game. The dice button means
+        // "I'm done building, roll now", so roll immediately.
+        this.rollDice(0, this.randomInt(10) + 5, playerId);
     }
 
     // ========== JAIL ==========
