@@ -4133,10 +4133,16 @@ h3 {
   // size beats the 3D table effect, so the tilt drops to a shallow 8deg with a
   // longer perspective: only a few percent of expansion, which buys back a
   // much larger board that still fits.
+  // Fully flat top-down on mobile. With no rotateX there is no perspective
+  // expansion at all, so the rendered width equals the declared width and the
+  // board can run nearly edge to edge. This is the largest and most legible it
+  // can be on a phone; the 3D table look is a desktop-only affordance.
+  // 98vw still rendered 351px in a 355px viewport (border adds a few px), so it
+  // hung 5px off the left edge. 94vw clears it with a small margin.
   .board {
-    width: 90vw;
-    height: 90vw;
-    transform: perspective(1400px) rotateX(8deg);
+    width: 94vw;
+    height: 94vw;
+    transform: none;
   }
 
   // The board is square and capped at 100vw, so on a tall phone it can never
