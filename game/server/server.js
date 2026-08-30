@@ -19,6 +19,7 @@ const file = new (static_.Server)(path.join(__dirname, '..', 'static'), {cache: 
 const {GameService} = require('./game');
 const accounts = require('./accounts');
 const vault = require('./vault');
+const walletgate = require('./walletgate');
 
 let lastActivity = Date.now();
 
@@ -159,6 +160,31 @@ const handleRequest = async function (request, response) {
         return jsonResponse(response, accounts.ACHIEVEMENT_DEFS.map(a => ({id: a.id, name: a.name, desc: a.desc, icon: a.icon, xp: a.xp})));
     }
 
+    // --- WALLET GATE ---
+    // The balance check happens on this side of the wire. A client-reported
+    // balance is meaningless, and hiding a button is not access control.
+    if (url === '/api/wallet/config') {
+        return jsonResponse(response, walletgate.getConfig());
+    }
+    if (url === '/api/wallet/challenge' && request.method === 'POST') {
+        const body = await parseBody(request);
+        const ip = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
+        const result = walletgate.createChallenge(body.publicKey, ip);
+        return jsonResponse(response, result, result.error ? 400 : 200);
+    }
+    if (url === '/api/wallet/verify' && request.method === 'POST') {
+        const body = await parseBody(request);
+        const ip = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
+        const result = await walletgate.verifyChallenge(body.publicKey, body.signature, body.nonce, ip);
+        return jsonResponse(response, result, result.error ? 403 : 200);
+    }
+    if (url === '/api/wallet/session') {
+        const s = walletgate.getSession(params.get('token'));
+        return jsonResponse(response, s
+            ? {valid: true, publicKey: s.publicKey, balance: s.balance}
+            : {valid: false}, s ? 200 : 401);
+    }
+
     // --- VAULT API ---
     if (url === '/api/vault') {
         return jsonResponse(response, vault.getVaultState());
@@ -196,6 +222,19 @@ wss.on('connection', function (ws) {
             const messageObject = JSON.parse(message);
 
             if (messageObject.type === 'joinRoom') {
+                // The real gate. Hiding the Play button in the client is
+                // cosmetic - anyone can open a socket and send joinRoom, so the
+                // check has to live here.
+                if (!walletgate.isAllowed(messageObject.gateToken)) {
+                    try {
+                        ws.send(JSON.stringify({
+                            type: 'gateRequired',
+                            message: 'Connect your wallet and hold ' + walletgate.getConfig().minBalance + ' tokens to join a game.'
+                        }));
+                    } catch (e) {}
+                    return;
+                }
+
                 const roomId = (messageObject.roomId || 'default').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 32) || 'default';
                 if (ws.roomId && rooms[ws.roomId]) {
                     rooms[ws.roomId].clients.delete(ws);

@@ -131,10 +131,15 @@ export default class App extends React.Component {
 
     updateGame = (message) => {
         const data = JSON.parse(message.data);
-        if (data.type === 'roomJoined') {
-            gameService.currentRoom = data.roomId;
-            this.setState({inRoom: true, roomId: data.roomId, view: 'game', showHelp: true});
-        } else if (data.type === 'roomList') {
+            if (data.type === 'gateRequired') {
+                // Server refused the join because the wallet gate is on and we
+                // have no valid session. Stay in the lobby and say why.
+                this.setState({inRoom: false, view: 'lobby'});
+                this.addNotification(data.message || 'Connect your wallet to play', 'warning');
+            } else if (data.type === 'roomJoined') {
+                gameService.currentRoom = data.roomId;
+                this.setState({inRoom: true, roomId: data.roomId, view: 'game', showHelp: true});
+            } else if (data.type === 'roomList') {
             if (gameService.onRoomList) gameService.onRoomList(data.rooms);
         } else if (data.type === 'authResult') {
             if (gameService.onAuthResult) gameService.onAuthResult(data);
@@ -569,7 +574,8 @@ export default class App extends React.Component {
                     cpolyBalance={this.state.cpolyBalances[gameService.currentPlayer] || 0}
                     referralData={this.state.referralData[gameService.currentPlayer] || {count: 0, earnings: 0}}
                 />
-                <WalletConnect onNotify={this.addNotification}/>
+                            <WalletConnect onNotify={this.addNotification}
+                                           onGateChange={(g) => this.setState({gate: g})}/>
                 <Notifications notifications={this.state.notifications}/>
                 {/* Mobile top toolbar - simplified */}
                 <div className="game-toolbar">

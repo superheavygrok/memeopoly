@@ -12,9 +12,19 @@ class GameService {
     onVaultState = null;
     onTokenBalance = null;
 
+    // Set by WalletConnect after the server verifies a signed challenge.
+    // Sent with every join; the server re-checks it and rejects the join if the
+    // gate is on and the token is missing or expired.
+    gateToken = null;
+
     joinRoom = (roomId, turnTimer) => {
         this.currentPlayer = null;
-        this.ws.send(JSON.stringify({type: 'joinRoom', roomId: roomId, turnTimer: turnTimer || 0}));
+        this.ws.send(JSON.stringify({
+            type: 'joinRoom',
+            roomId: roomId,
+            turnTimer: turnTimer || 0,
+            gateToken: this.gateToken || localStorage.getItem('memeopoly_gate_token') || null
+        }));
     }
 
     listRooms = () => {
