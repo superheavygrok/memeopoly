@@ -114,10 +114,20 @@ h3 {
 
   .card-picked {
     position: absolute;
-    top: 200px;
-    left: calc(50% - 250px);
-    width: 500px;
+    // Was: top:200px; left:calc(50% - 250px); width:500px
+    // On a 390px phone that resolves to left:-55px and a 500px-wide box, so the
+    // card hung off both edges while the fixed overlay (z-index 999) swallowed
+    // every tap on the bottom nav -- the app looked washed out and dead.
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(500px, calc(100vw - 24px));
+    // Without border-box the 20px padding + 2px border were ADDED on top of the
+    // width, pushing the card past both screen edges on a phone.
+    box-sizing: border-box;
     min-height: 250px;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
 
     border: 2px solid black;
     padding: 20px;
@@ -1442,10 +1452,13 @@ h3 {
 
 // Referral Panel
 .referral-btn {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 100;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    // .top-nav is fixed at z-index 900 and covers this exact area, so at
+    // z-index 100 the REFER button was painted underneath it and could not be
+    // tapped at all on mobile. Must sit above the bar it visually lives in.
+    z-index: 950;
   background: linear-gradient(180deg, rgba(30,40,60,0.95) 0%, rgba(15,20,35,0.95) 100%);
   border: 1px solid @borderGlow;
   color: @accentCyan;
@@ -1601,7 +1614,9 @@ h3 {
   position: fixed;
   top: 10px;
   right: 60px;
-  z-index: 100;
+  // Same problem as .referral-btn: .top-nav (z-index 900) painted over this,
+  // making Connect Wallet untappable on mobile.
+  z-index: 950;
   background: linear-gradient(135deg, #9945ff 0%, #7c3aed 40%, #14f195 100%);
   color: white;
   border: none;
@@ -2736,7 +2751,6 @@ h3 {
 
   &.reward { background: linear-gradient(90deg, #a855f7, #7c3aed); }
   &.circulating { background: linear-gradient(90deg, #38bdf8, #0ea5e9); }
-  &.cashout { background: linear-gradient(90deg, #22c55e, #16a34a); }
 }
 
 .vault-grid {
@@ -2783,6 +2797,48 @@ h3 {
   font-size: 11px;
   color: #22c55e;
   text-align: center;
+}
+
+.error-boundary {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  max-width: 320px;
+  padding: 20px 22px;
+  text-align: center;
+  background: @bgPanel;
+  border: 1px solid @borderGlow;
+  border-radius: 14px;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+
+  h3 { margin: 0 0 8px; font-size: 16px; }
+  p { margin: 0 0 14px; font-size: 13px; line-height: 1.5; color: @textMuted; }
+
+  .error-boundary-btn {
+    padding: 9px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #fff;
+    background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+
+    &:hover { filter: brightness(1.08); }
+    &:active { transform: translateY(1px); }
+  }
+}
+
+.vault-disclaimer {
+  font-size: 11px;
+  line-height: 1.5;
+  color: #94a3b8;
+  background: rgba(148,163,184,0.06);
+  border: 1px solid rgba(148,163,184,0.18);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 12px 0 0;
 }
 
 .vault-my-tokens {
@@ -3136,7 +3192,9 @@ h3 {
   border: 2px solid rgba(184, 134, 11, 0.4);
   border-radius: 16px;
   padding: 24px;
-  min-width: 400px;
+  // min-width:400px overflowed a 390px phone. Let it shrink.
+  width: min(500px, calc(100vw - 24px));
+  min-width: 0;
   max-width: 500px;
   max-height: 80vh;
   overflow-y: auto;
@@ -3944,4 +4002,71 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+
+// ---------------------------------------------------------------------------
+// Mobile modal sizing.
+// The card / buy / auction / trade modals were laid out for desktop only
+// (fixed 500px box, 30px body text). On a 390px viewport the box overflowed
+// both edges while the full-screen overlay blocked the bottom nav, so the app
+// looked blank and unresponsive.
+// ---------------------------------------------------------------------------
+@media (max-width: 600px) {
+  // NOTE: the existing mobile rule further up already sets width/left/top for
+  // .card-overlay .card-picked. Only add what it misses.
+  .card-overlay .card-picked {
+    padding: 16px;
+    min-height: 0;
+    max-height: calc(100vh - 160px);
+    overflow-y: auto;
+
+    .card-text { line-height: 1.35; }
+    .close { top: 8px; right: 10px; font-size: 22px; }
+  }
+
+  .trade-modal, .trade-incoming-modal {
+    padding: 16px;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+  }
+
+  .auction-modal {
+    min-width: 0;
+    width: min(420px, calc(100vw - 24px));
+  }
+
+  // #memeopoly-footer is fixed at z-index 1000 and becomes a 2-row, ~66px tall
+  // bar on mobile, but .landing-page only reserved 60px.
+  .landing-page {
+    padding-bottom: 110px;
+  }
+
+  // The slide-up panel was rendering BELOW its overlay (top 674, bottom 800 on
+  // a 767px screen): it ran off the bottom of the screen, and because the
+  // bottom nav is z-index 100 vs the overlay's 90, the nav painted OVER the
+  // panel header -- so the panel's own close button was untappable.
+  // Pin the panel to the bottom of the overlay with flex and lift the overlay
+  // above the nav instead of relying on absolute positioning.
+  .mobile-slideup-overlay {
+    display: flex;
+    align-items: flex-end;
+    z-index: 110;
+  }
+
+  .mobile-slideup {
+    position: relative;
+    width: 100%;
+    max-height: 100%;
+  }
+
+  #memeopoly-footer {
+    // Keep the long contract address from forcing the bar even taller.
+    span:first-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+  }
 }
