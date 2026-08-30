@@ -89,10 +89,12 @@ export default class LandingPage extends React.Component {
                 </div>
 
                 <div className="landing-footer">
-                    <p>CA: XXXX...XXXX</p>
+                    <p className="landing-ca" title="B4GQTgdRHi9HvYVYiHhokAfi2YkW99EzL6fshaS6BAGS">
+                        CA: B4GQTgdRHi9HvYVYiHhokAfi2YkW99EzL6fshaS6BAGS
+                    </p>
                     <div className="landing-links">
-                        <a href="https://x.com/MemeopolyGame" target="_blank">Twitter</a>
-                        <a href="#" target="_blank">Pump.fun</a>
+                        <a href="https://x.com/MemeopolyGame" target="_blank" rel="noopener">Twitter</a>
+                        <a href="https://bags.fm/B4GQTgdRHi9HvYVYiHhokAfi2YkW99EzL6fshaS6BAGS" target="_blank" rel="noopener">Bags</a>
                     </div>
                 </div>
             </div>
