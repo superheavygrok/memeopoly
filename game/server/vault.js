@@ -24,7 +24,8 @@ const DEFAULT_VAULT = {
     // Circulating — tokens distributed to users
     circulating: 0,
 
-    // Cash-out vault — funded by 10% of all monetization
+    // Cash-out vault: REMOVED — $MEMO is not redeemable for money.
+    // Kept as a permanent zero so existing vault.json files still load.
     cashOutVault: 0,
 
     // Halvening tracker
@@ -212,82 +213,75 @@ function getAllAccountIds(accountsModule) {
     } catch(e) { return []; }
 }
 
-// --- CASH-OUT VAULT ---
-// Funded by 10% of ALL monetization
-// When tokens are cashed out, they go BACK to rewardVault (not burned)
+// --- REVENUE TRACKING (internal accounting only) ---
+//
+// IMPORTANT: revenue is recorded for internal analytics ONLY. It is deliberately
+// NOT linked to $MEMO in any way.
+//
+// A previous version routed 10% of all platform revenue into a "cash-out vault"
+// and let users redeem $MEMO against it for real money. That made a user's
+// $MEMO balance a pro-rata claim on business revenue, realizable for cash and
+// appreciating via an operator-controlled halvening schedule -- i.e. an
+// investment contract under the Howey test. That mechanic has been removed.
+//
+// Do NOT reintroduce any function that converts $MEMO into money, or that
+// derives a $MEMO price from revenue, treasury, or supply. $MEMO is a
+// non-redeemable in-game point used for cosmetics only.
 
 function recordRevenue(source, amount) {
     if (!vault.revenue[source]) vault.revenue[source] = 0;
     vault.revenue[source] += amount;
     vault.revenue.total += amount;
 
-    // 10% goes to cash-out vault
-    const cashOutFunding = amount * 0.10;
-    vault.cashOutVault += cashOutFunding;
-
     vault.transactions.push({
         type: 'revenue',
         source,
         amount,
-        cashOutFunding,
-        cashOutVaultBalance: vault.cashOutVault,
         timestamp: new Date().toISOString()
     });
 
     saveVault();
-    return {funded: cashOutFunding, vaultBalance: vault.cashOutVault};
+    return {recorded: amount, total: vault.revenue.total};
 }
 
-function cashOut(userId, tokenAmount, accountsModule) {
-    if (!vault.launched) return {error: 'Token not launched yet'};
+// --- SPEND $MEMO (cosmetics only) ---
+//
+// Replaces the removed cashOut(). $MEMO leaves a user's balance ONLY by being
+// spent on in-game cosmetic items. It never converts to money, and spent
+// $MEMO is returned to the reward vault so it can be re-earned by players.
 
+function spendOnCosmetic(userId, tokenAmount, itemId, accountsModule) {
     const acc = accountsModule.getAccount(userId);
     if (!acc) return {error: 'Account not found'};
+    if (!itemId) return {error: 'No item specified'};
 
-    // Check user has enough tokens (stored in account cpolyBalance)
-    if (acc.cpolyBalance < tokenAmount) return {error: 'Insufficient token balance'};
+    const amount = Math.floor(Number(tokenAmount));
+    if (!Number.isFinite(amount) || amount <= 0) return {error: 'Invalid amount'};
+    if ((acc.cpolyBalance || 0) < amount) return {error: 'Insufficient $MEMO balance'};
 
-    // Calculate USD value: tokens * (cashOutVault / circulating)
-    if (vault.circulating <= 0) return {error: 'No circulating supply'};
-
-    const tokenValue = vault.cashOutVault / vault.circulating;
-    const cashValue = tokenAmount * tokenValue;
-
-    if (cashValue <= 0) return {error: 'Cash-out vault is empty'};
-    if (cashValue > vault.cashOutVault) return {error: 'Insufficient funds in cash-out vault'};
-
-    // Deduct from cash-out vault
-    vault.cashOutVault -= cashValue;
-
-    // RECYCLE: tokens go back to reward vault, NOT burned
-    vault.rewardVault += tokenAmount;
-    vault.circulating -= tokenAmount;
-    vault.recycled += tokenAmount;
-
-    // Deduct from user balance
-    accountsModule.addCpoly(userId, -tokenAmount, 'cash_out');
+    // Deduct from the user, return the points to the reward vault
+    accountsModule.addCpoly(userId, -amount, 'cosmetic_purchase');
+    vault.rewardVault += amount;
+    vault.circulating -= amount;
+    vault.recycled += amount;
 
     vault.transactions.push({
-        type: 'cash_out',
+        type: 'cosmetic_purchase',
         userId,
-        tokenAmount,
-        cashValue,
-        tokenValue,
-        recycledToVault: tokenAmount,
+        itemId,
+        amount,
         timestamp: new Date().toISOString()
     });
 
-    // Recalculate halvening threshold after recycling
     const distributed = vault.totalSupply - vault.rewardVault;
     vault.halvening.nextThreshold = distributed + (vault.rewardVault / 2);
 
     saveVault();
     return {
         success: true,
-        tokensCashedOut: tokenAmount,
-        cashValue: cashValue.toFixed(2),
-        tokensRecycled: tokenAmount,
-        rewardVaultBalance: vault.rewardVault
+        itemId,
+        spent: amount,
+        remainingBalance: (acc.cpolyBalance || 0) - amount
     };
 }
 
@@ -314,18 +308,21 @@ function getRewardAmount(action) {
 // --- PUBLIC API ---
 
 function getVaultState() {
+    // NOTE: cashOutVault and raw revenue are deliberately NOT exposed to clients.
+    // Publishing a treasury balance next to a token balance implies a redemption
+    // value that does not exist. Revenue stays server-side for analytics only.
     return {
         totalSupply: vault.totalSupply,
         rewardVault: vault.rewardVault,
         circulating: vault.circulating,
-        cashOutVault: vault.cashOutVault,
         halvening: {...vault.halvening},
         totalXPEarned: vault.totalXPEarned,
         launched: vault.launched,
         launchDate: vault.launchDate,
         conversionRate: vault.conversionRate,
         recycled: vault.recycled,
-        revenue: {...vault.revenue},
+        redeemable: false,
+        disclaimer: '$MEMO is an in-game point with no cash value and cannot be redeemed for money.',
         recentTransactions: vault.transactions.slice(-20)
     };
 }
@@ -342,13 +339,13 @@ function getUserTokenBalance(userId, accountsModule) {
         tokens += vault.airdrop.snapshot[userId].tokens;
     }
 
+    // No estimatedValue. $MEMO has no monetary value and quoting one in the UI
+    // is the representation that turns a game point into an investment product.
     return {
         tokens,
         xp: totalXP,
         level: acc.level,
-        estimatedValue: vault.launched && vault.circulating > 0
-            ? ((tokens * vault.cashOutVault) / vault.circulating).toFixed(2)
-            : '0.00'
+        redeemable: false
     };
 }
 
@@ -357,7 +354,7 @@ module.exports = {
     distributeFromVault,
     launchToken,
     recordRevenue,
-    cashOut,
+    spendOnCosmetic,
     getRewardAmount,
     getVaultState,
     getUserTokenBalance,

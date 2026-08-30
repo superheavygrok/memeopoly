@@ -174,6 +174,9 @@ const handleRequest = async function (request, response) {
     // Track page view
     accounts.trackEvent('page_view', {url: request.url});
 
+    // Note: node-static is constructed with {cache: 0}, so it already sends
+    // Cache-Control: max-age=0 and overrides any header set here. Setting
+    // cache headers at this point has no effect.
     file.serve(request, response);
 };
 

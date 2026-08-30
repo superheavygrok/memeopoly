@@ -58,17 +58,20 @@ export default class VaultPanel extends React.Component {
                         <div className="supply-segment circulating" style={{width: (vault.circulating / vault.totalSupply * 100) + '%'}}>
                             <span>Circulating</span>
                         </div>
-                        {vault.cashOutVault > 0 && <div className="supply-segment cashout" style={{width: Math.max(1, vault.cashOutVault / vault.totalSupply * 100) + '%'}}>
-                            <span>Cash-Out</span>
-                        </div>}
                     </div>
 
                     <div className="vault-grid">
                         <div className="vstat"><span>{this.formatNum(vault.totalSupply)}</span><label>Total Supply</label></div>
                         <div className="vstat"><span>{this.formatNum(vault.rewardVault)}</span><label>Reward Vault</label></div>
                         <div className="vstat"><span>{this.formatNum(vault.circulating)}</span><label>Circulating</label></div>
-                        <div className="vstat highlight"><span>${this.formatNum(vault.cashOutVault)}</span><label>Cash-Out Vault</label></div>
+                        <div className="vstat"><span>{this.formatNum(vault.recycled)}</span><label>Recycled</label></div>
                     </div>
+
+                    <p className="vault-disclaimer">
+                        $MEMO is an in-game point. It has no cash value, is not an
+                        investment, and cannot be redeemed for money. It is earned by
+                        playing and spent on cosmetic items only.
+                    </p>
 
                     <div className="halvening-info">
                         <h4>Halvening</h4>
@@ -88,10 +91,9 @@ export default class VaultPanel extends React.Component {
                 {tab === 'overview' && tokenBalance && <div className="vault-my-tokens">
                     <h4>Your Position</h4>
                     <div className="vault-grid">
-                        <div className="vstat"><span>{this.formatNum(tokenBalance.tokens)}</span><label>$MEMO Tokens</label></div>
+                        <div className="vstat highlight"><span>{this.formatNum(tokenBalance.tokens)}</span><label>$MEMO Points</label></div>
                         <div className="vstat"><span>Lv.{tokenBalance.level}</span><label>Level</label></div>
                         <div className="vstat"><span>{this.formatNum(tokenBalance.xp)}</span><label>Total XP</label></div>
-                        <div className="vstat highlight"><span>${tokenBalance.estimatedValue}</span><label>Est. Value</label></div>
                     </div>
                 </div>}
 
