@@ -18,7 +18,7 @@ export default class HelpDialog extends React.Component {
             <p>Every action needs to be done by a player and is logged in the "Logs" panel so you don't miss
                 anything</p>
 
-            <p>Any issue or request for the game ? <a href="https://pump.fun" target="_blank">Visit us on Pump.fun</a></p>
+            <p>Any issue or request for the game? Reach out to customer support via our <a href="https://x.com/memeopoly" target="_blank">X page</a></p>
         </Dialog>);
     }
 }
