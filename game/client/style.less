@@ -2146,8 +2146,14 @@ h3 {
   }
 
   .dialog .content {
-    margin: 30px auto;
+    // The fixed header stack (top-nav 48 + toolbar 40 + status 32) is ~117px
+    // tall. At margin-top:30px the dialog slid underneath it, so the player
+    // name field was cut off and untappable. Clear the header, clear the
+    // bottom nav, and scroll internally instead of scrolling the page.
+    margin: 124px auto 96px;
     padding: 8px 15px;
+    max-height: calc(100vh - 236px);
+    overflow-y: auto;
 
     h1 { font-size: 22px; }
     p { font-size: 13px; }
@@ -4066,6 +4072,63 @@ h3 {
   .auction-modal {
     min-width: 0;
     width: min(420px, calc(100vw - 24px));
+  }
+
+  // ---------------------------------------------------------------------
+  // Top bar: four elements were stacked in the same 49px strip.
+  //   brand  16..115   vs  REFER   10..72
+  //   login 293..325   vs  wallet 243..331
+  // .referral-btn and .wallet-btn are fixed elements floating OVER .top-nav
+  // (they are not children of it), which is fine on a wide desktop bar and
+  // guaranteed to collide at 355px. Raising z-index only changed which one
+  // won. Give each a lane instead.
+  // ---------------------------------------------------------------------
+  .referral-btn {
+    left: 8px;
+    max-width: 64px;
+    padding: 5px 8px;
+    font-size: 10px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .top-nav {
+    // Reserve the left lane for REFER so the brand starts after it.
+    padding-left: 80px;
+    padding-right: 8px;
+  }
+
+  .nav-brand {
+    font-size: 15px;
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // Wallet sits left of Login instead of on top of it.
+  .wallet-btn {
+    right: 52px;
+    max-width: 120px;
+    padding: 5px 8px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  .nav-btn {
+    flex: 0 0 auto;
+  }
+
+  // The board is square and capped at 100vw, so on a tall phone it can never
+  // fill the ~560px between the header and the bottom nav. Centre it instead
+  // of letting all the leftover space pile up underneath, which read as a
+  // broken/blank screen.
+  // .game computes to display:flex here, so align-content does nothing on a
+  // single-line row - align-items is the one that centres the board.
+  .game {
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 210px);
   }
 
   // #memeopoly-footer is fixed at z-index 1000 and becomes a 2-row, ~66px tall
