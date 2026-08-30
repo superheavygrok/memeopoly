@@ -4083,40 +4083,54 @@ h3 {
   // guaranteed to collide at 355px. Raising z-index only changed which one
   // won. Give each a lane instead.
   // ---------------------------------------------------------------------
+  // Capping REFER at 64px stopped it covering the logo but cut the label to
+  // "REFER (25" - hiding a collision by clipping text is not a fix. There is
+  // not room for brand + REFER + wallet + login at 355px, so drop the brand:
+  // the toolbar underneath already shows the room name, and legible controls
+  // matter more than a wordmark on a phone.
+  .nav-brand {
+    display: none;
+  }
+
   .referral-btn {
     left: 8px;
-    max-width: 64px;
-    padding: 5px 8px;
+    max-width: 116px;
+    padding: 5px 9px;
     font-size: 10px;
-    overflow: hidden;
     white-space: nowrap;
   }
 
   .top-nav {
-    // Reserve the left lane for REFER so the brand starts after it.
-    padding-left: 80px;
-    padding-right: 8px;
-  }
-
-  .nav-brand {
-    font-size: 15px;
-    max-width: 90px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    padding-left: 8px;
+    // Keep Login off the very edge; it was reading as clipped.
+    padding-right: 16px;
+    // .nav-brand is hidden above, which leaves Login as the only flex child.
+    // With space-between that pushed it to the LEFT, straight on top of REFER.
+    justify-content: flex-end;
   }
 
   // Wallet sits left of Login instead of on top of it.
   .wallet-btn {
-    right: 52px;
-    max-width: 120px;
+    right: 58px;
+    max-width: 92px;
     padding: 5px 8px;
     font-size: 10px;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .nav-btn {
     flex: 0 0 auto;
+  }
+
+  // The board is rotated with perspective(700px) rotateX(25deg), which projects
+  // its near edge WIDER than the declared width - measured ~23% wider, so 96vw
+  // rendered at 374px inside a 355px viewport and clipped the outer tile
+  // columns on both sides. 78vw projects to roughly the full width.
+  .board {
+    width: 78vw;
+    height: 78vw;
   }
 
   // The board is square and capped at 100vw, so on a tall phone it can never
