@@ -4127,10 +4127,16 @@ h3 {
   // The board is rotated with perspective(700px) rotateX(25deg), which projects
   // its near edge WIDER than the declared width - measured ~23% wider, so 96vw
   // rendered at 374px inside a 355px viewport and clipped the outer tile
-  // columns on both sides. 78vw projects to roughly the full width.
+  // columns on both sides.
+  //
+  // Shrinking to 78vw made it fit but wasted most of the screen. On a phone
+  // size beats the 3D table effect, so the tilt drops to a shallow 8deg with a
+  // longer perspective: only a few percent of expansion, which buys back a
+  // much larger board that still fits.
   .board {
-    width: 78vw;
-    height: 78vw;
+    width: 90vw;
+    height: 90vw;
+    transform: perspective(1400px) rotateX(8deg);
   }
 
   // The board is square and capped at 100vw, so on a tall phone it can never
