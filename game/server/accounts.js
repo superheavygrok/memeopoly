@@ -166,7 +166,7 @@ function updateStat(userId, stat, increment) {
 const ACHIEVEMENT_DEFS = [
     {id: 'first_game', name: 'First Roll', desc: 'Play your first game', icon: 'dice', check: a => a.stats.gamesPlayed >= 1, xp: 50},
     {id: 'veteran', name: 'Veteran', desc: 'Play 10 games', icon: 'trophy', check: a => a.stats.gamesPlayed >= 10, xp: 200},
-    {id: 'whale', name: 'Whale', desc: 'Accumulate 1000 $MEMO', icon: 'gem', check: a => a.stats.totalCpoly >= 1000, xp: 300},
+    {id: 'whale', name: 'Whale', desc: 'Accumulate 1000 $MEMEOPOLY', icon: 'gem', check: a => a.stats.totalCpoly >= 1000, xp: 300},
     {id: 'streak_3', name: 'Consistent', desc: '3-day login streak', icon: 'fire', check: a => a.stats.bestStreak >= 3, xp: 100},
     {id: 'streak_7', name: 'Dedicated', desc: '7-day login streak', icon: 'fire', check: a => a.stats.bestStreak >= 7, xp: 500},
     {id: 'streak_30', name: 'Obsessed', desc: '30-day login streak', icon: 'fire', check: a => a.stats.bestStreak >= 30, xp: 2000},

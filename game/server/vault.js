@@ -24,7 +24,7 @@ const DEFAULT_VAULT = {
     // Circulating — tokens distributed to users
     circulating: 0,
 
-    // Cash-out vault: REMOVED — $MEMO is not redeemable for money.
+    // Cash-out vault: REMOVED — $MEMEOPOLY is not redeemable for money.
     // Kept as a permanent zero so existing vault.json files still load.
     cashOutVault: 0,
 
@@ -216,16 +216,16 @@ function getAllAccountIds(accountsModule) {
 // --- REVENUE TRACKING (internal accounting only) ---
 //
 // IMPORTANT: revenue is recorded for internal analytics ONLY. It is deliberately
-// NOT linked to $MEMO in any way.
+// NOT linked to $MEMEOPOLY in any way.
 //
 // A previous version routed 10% of all platform revenue into a "cash-out vault"
-// and let users redeem $MEMO against it for real money. That made a user's
-// $MEMO balance a pro-rata claim on business revenue, realizable for cash and
+// and let users redeem $MEMEOPOLY against it for real money. That made a user's
+// $MEMEOPOLY balance a pro-rata claim on business revenue, realizable for cash and
 // appreciating via an operator-controlled halvening schedule -- i.e. an
 // investment contract under the Howey test. That mechanic has been removed.
 //
-// Do NOT reintroduce any function that converts $MEMO into money, or that
-// derives a $MEMO price from revenue, treasury, or supply. $MEMO is a
+// Do NOT reintroduce any function that converts $MEMEOPOLY into money, or that
+// derives a $MEMEOPOLY price from revenue, treasury, or supply. $MEMEOPOLY is a
 // non-redeemable in-game point used for cosmetics only.
 
 function recordRevenue(source, amount) {
@@ -244,11 +244,11 @@ function recordRevenue(source, amount) {
     return {recorded: amount, total: vault.revenue.total};
 }
 
-// --- SPEND $MEMO (cosmetics only) ---
+// --- SPEND $MEMEOPOLY (cosmetics only) ---
 //
-// Replaces the removed cashOut(). $MEMO leaves a user's balance ONLY by being
+// Replaces the removed cashOut(). $MEMEOPOLY leaves a user's balance ONLY by being
 // spent on in-game cosmetic items. It never converts to money, and spent
-// $MEMO is returned to the reward vault so it can be re-earned by players.
+// $MEMEOPOLY is returned to the reward vault so it can be re-earned by players.
 
 function spendOnCosmetic(userId, tokenAmount, itemId, accountsModule) {
     const acc = accountsModule.getAccount(userId);
@@ -257,7 +257,7 @@ function spendOnCosmetic(userId, tokenAmount, itemId, accountsModule) {
 
     const amount = Math.floor(Number(tokenAmount));
     if (!Number.isFinite(amount) || amount <= 0) return {error: 'Invalid amount'};
-    if ((acc.cpolyBalance || 0) < amount) return {error: 'Insufficient $MEMO balance'};
+    if ((acc.cpolyBalance || 0) < amount) return {error: 'Insufficient $MEMEOPOLY balance'};
 
     // Deduct from the user, return the points to the reward vault
     accountsModule.addCpoly(userId, -amount, 'cosmetic_purchase');
@@ -322,7 +322,7 @@ function getVaultState() {
         conversionRate: vault.conversionRate,
         recycled: vault.recycled,
         redeemable: false,
-        disclaimer: '$MEMO is an in-game point with no cash value and cannot be redeemed for money.',
+        disclaimer: '$MEMEOPOLY is an in-game point with no cash value and cannot be redeemed for money.',
         recentTransactions: vault.transactions.slice(-20)
     };
 }
@@ -339,7 +339,7 @@ function getUserTokenBalance(userId, accountsModule) {
         tokens += vault.airdrop.snapshot[userId].tokens;
     }
 
-    // No estimatedValue. $MEMO has no monetary value and quoting one in the UI
+    // No estimatedValue. $MEMEOPOLY has no monetary value and quoting one in the UI
     // is the representation that turns a game point into an investment product.
     return {
         tokens,

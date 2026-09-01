@@ -135,7 +135,7 @@ class GameService {
 
         const player = this.getPlayerFromId(playerId);
         const name = player ? player.name : playerId;
-        this.sendLog(name + ' earned ' + amount + ' $MEMO: ' + reason);
+        this.sendLog(name + ' earned ' + amount + ' $MEMEOPOLY: ' + reason);
         this.broadcastCpoly();
     }
 
@@ -345,7 +345,7 @@ class GameService {
                     {
                         position: 39,
                         owner: "1",
-                        title: "$MEMO Palace",
+                        title: "$MEMEOPOLY Palace",
                         color: "#1a2596",
                         rent: {
                             "Rent": "$50",
@@ -830,7 +830,7 @@ class GameService {
             cards: {
                 chance: {
                     available: shuffle([
-                        "MASSIVE AIRDROP! Collect $200 in $MEMO tokens",
+                        "MASSIVE AIRDROP! Collect $200 in $MEMEOPOLY tokens",
                         "Your bag pumped 1000x! Collect $100",
                         "RUGGED! Go directly to jail. Do not pass GO. Do not collect $200",
                         "Staking rewards hit different. Collect $100",
@@ -852,12 +852,12 @@ class GameService {
                         OUT_OF_JAIL,
                         "RUGGED by dev! Go directly to jail. Do not pass GO. Do not collect $200",
                         "Advance to the next station. If UNOWNED, you may buy it from the bank. If OWNED, pay the owner twice the rent",
-                        "Advance to $MEMO Palace",
+                        "Advance to $MEMEOPOLY Palace",
                         "Advance to the next station. If UNOWNED, you may buy it from the bank. If OWNED, pay the owner twice the rent",
                         "Elected DAO chairman! Pay each player $50",
                         "Advance to $PIPPIN Square. If you pass GO collect $200",
                         "Your DeFi yield matures. Collect $150",
-                        "Advance to GO, collect $200 in $MEMO tokens",
+                        "Advance to GO, collect $200 in $MEMEOPOLY tokens",
                         "Take a trip to Pump.fun Station, if you pass GO collect $200",
                         "Slippage on Jupiter. Pay $15",
                         "Advance to the nearest utility. If UNOWNED, you may buy it from the bank. If OWNED, roll the dice and pay 10x your roll",
@@ -2080,7 +2080,7 @@ class GameService {
             this.sendToJail(player);
             return;
         }
-        if (text.includes('advance to go') || text === 'advance to go, collect $200 in $memo tokens') {
+        if (text.includes('advance to go') || text === 'advance to go, collect $200 in $MEMEOPOLY tokens') {
             player.position = 0;
             this.autoTransferMoney(1, player.id, 200);
             this.sendLog(player.name + " advanced to GO and collected $200");

@@ -45,7 +45,7 @@ export default class LandingPage extends React.Component {
                     <img src="./mascot.png" alt="Memeopoly Mascot" className="landing-mascot" onError={(e) => {e.target.style.display='none'}} />
                     <h1 className="landing-title">Memeopoly</h1>
                     <p className="landing-subtitle">The meme-powered multiplayer board game</p>
-                    <p className="landing-desc">Roll dice. Buy meme coins. Earn $MEMO tokens. Compete on the leaderboard. Build your meme empire.</p>
+                    <p className="landing-desc">Roll dice. Buy meme coins. Earn $MEMEOPOLY tokens. Compete on the leaderboard. Build your meme empire.</p>
 
                     {stats && <div className="landing-stats">
                         <div className="landing-stat"><span className="stat-num">{stats.totalAccounts || 0}</span><span className="stat-label">Players</span></div>
@@ -81,7 +81,7 @@ export default class LandingPage extends React.Component {
 
                 <div className="landing-features">
                     <div className="feature-card"><i className="fas fa-dice"></i><h3>Multiplayer Rooms</h3><p>Create or join rooms. Play with friends in real-time.</p></div>
-                    <div className="feature-card"><i className="fas fa-coins"></i><h3>Earn $MEMO</h3><p>Daily logins, passing GO, referrals, and achievements all earn tokens.</p></div>
+                    <div className="feature-card"><i className="fas fa-coins"></i><h3>Earn $MEMEOPOLY</h3><p>Daily logins, passing GO, referrals, and achievements all earn tokens.</p></div>
                     <div className="feature-card"><i className="fas fa-trophy"></i><h3>Leaderboards</h3><p>Compete globally for XP, wins, and longest streaks.</p></div>
                     <div className="feature-card"><i className="fas fa-user-friends"></i><h3>Referral System</h3><p>Invite friends, earn 10% of their rewards forever.</p></div>
                     <div className="feature-card"><i className="fas fa-paint-brush"></i><h3>Custom Skins</h3><p>Unlock skins, choose colors, or upload your own game piece.</p></div>

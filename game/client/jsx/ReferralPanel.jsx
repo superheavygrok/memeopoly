@@ -60,7 +60,7 @@ export default class ReferralPanel extends React.Component {
 
         return (<div>
             <button className="referral-btn" onClick={() => this.setState({open: true})}>
-                REFER {cpolyBalance > 0 ? `(${cpolyBalance} $MEMO)` : ''}
+                REFER {cpolyBalance > 0 ? `(${cpolyBalance} $MEMEOPOLY)` : ''}
             </button>
             {this.state.open && <div className="referral-overlay" onClick={() => this.setState({open: false})}>
                 <div className="referral-panel" style={{position: 'relative'}} onClick={e => e.stopPropagation()}>
@@ -74,7 +74,7 @@ export default class ReferralPanel extends React.Component {
                         </button>}
                     </div>
                     <div className="referral-section">
-                        <label>Your $MEMO Balance</label>
+                        <label>Your $MEMEOPOLY Balance</label>
                         <span className="referral-code">{cpolyBalance}</span>
                     </div>
                     <div className="referral-stats">
@@ -84,21 +84,21 @@ export default class ReferralPanel extends React.Component {
                         </div>
                         <div className="stat">
                             <span className="num">{refData.earnings || 0}</span>
-                            <span className="label">$MEMO from Refs</span>
+                            <span className="label">$MEMEOPOLY from Refs</span>
                         </div>
                     </div>
                     <div className="milestones">
                         <div className={`milestone ${(refData.count || 0) >= 5 ? 'claimed' : ''}`}>
                             <span>5 Referrals {(refData.count || 0) >= 5 ? '(claimed)' : ''}</span>
-                            <span className="reward">+500 $MEMO</span>
+                            <span className="reward">+500 $MEMEOPOLY</span>
                         </div>
                         <div className={`milestone ${(refData.count || 0) >= 10 ? 'claimed' : ''}`}>
                             <span>10 Referrals {(refData.count || 0) >= 10 ? '(claimed)' : ''}</span>
-                            <span className="reward">+1,500 $MEMO</span>
+                            <span className="reward">+1,500 $MEMEOPOLY</span>
                         </div>
                         <div className={`milestone ${(refData.count || 0) >= 25 ? 'claimed' : ''}`}>
                             <span>25 Referrals {(refData.count || 0) >= 25 ? '(claimed)' : ''}</span>
-                            <span className="reward">+5,000 $MEMO</span>
+                            <span className="reward">+5,000 $MEMEOPOLY</span>
                         </div>
                     </div>
                 </div>

@@ -133,7 +133,7 @@ const handleRequest = async function (request, response) {
         const roomId = url.split('/share/room/')[1];
         const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Join ${roomId} - Memeopoly</title>
 <meta property="og:title" content="Join room '${roomId}' on Memeopoly!">
-<meta property="og:description" content="Crypto-themed multiplayer board game. Join now and earn $MEMO tokens!">
+<meta property="og:description" content="Crypto-themed multiplayer board game. Join now and earn $MEMEOPOLY tokens!">
 <meta name="twitter:card" content="summary">
 <script>window.location='/?room=${roomId}'</script></head><body>Redirecting...</body></html>`;
         response.writeHead(200, {'Content-Type': 'text/html'});

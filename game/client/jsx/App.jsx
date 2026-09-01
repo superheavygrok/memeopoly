@@ -179,7 +179,7 @@ export default class App extends React.Component {
                 const prev = this.state.cpolyBalances[myId] || 0;
                 const now = data.balances[myId];
                 if (now > prev) {
-                    this.addNotification('+' + (now - prev) + ' $MEMO earned!', 'reward', 'Token Reward');
+                    this.addNotification('+' + (now - prev) + ' $MEMEOPOLY earned!', 'reward', 'Token Reward');
                 }
             }
         } else if (data.type === 'xpUpdate') {
@@ -515,7 +515,7 @@ export default class App extends React.Component {
                 <span className="nav-brand" onClick={() => this.setState({view: 'lobby', inRoom: false})}>Memeopoly</span>
                 {account && <div className="nav-user">
                     <span className="nav-level">Lv.{account.level}</span>
-                    <span className="nav-cpoly">{account.cpolyBalance} $MEMO</span>
+                    <span className="nav-cpoly">{account.cpolyBalance} $MEMEOPOLY</span>
                     <button className="nav-btn" onClick={() => { this.refreshAccount(); this.setState({showProfile: !this.state.showProfile, showLeaderboard: false}); }}>
                         <i className="fas fa-user"></i>
                     </button>
@@ -632,7 +632,7 @@ export default class App extends React.Component {
                             <span className="msb-stage">{myXP.stage.name}</span>
                         </div>
                         <div className="msb-right">
-                            <span className="msb-balance">{balance} $MEMO</span>
+                            <span className="msb-balance">{balance} $MEMEOPOLY</span>
                         </div>
                     </div>;
                 })()}

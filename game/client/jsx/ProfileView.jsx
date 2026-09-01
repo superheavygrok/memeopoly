@@ -36,7 +36,7 @@ export default class ProfileView extends React.Component {
                 </div>
 
                 <div className="profile-stats">
-                    <div className="pstat"><span>{account.cpolyBalance}</span><label>$MEMO</label></div>
+                    <div className="pstat"><span>{account.cpolyBalance}</span><label>$MEMEOPOLY</label></div>
                     <div className="pstat"><span>{account.stats.gamesPlayed}</span><label>Games</label></div>
                     <div className="pstat"><span>{account.stats.gamesWon}</span><label>Wins</label></div>
                     <div className="pstat"><span>{account.stats.loginStreak}</span><label>Streak</label></div>

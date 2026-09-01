@@ -21,7 +21,7 @@ export default class Leaderboard extends React.Component {
 
     render() {
         const {tab, entries} = this.state;
-        const tabs = [{id: 'xp', label: 'XP'}, {id: 'cpoly', label: '$MEMO'}, {id: 'wins', label: 'Wins'}, {id: 'streak', label: 'Streak'}];
+        const tabs = [{id: 'xp', label: 'XP'}, {id: 'cpoly', label: '$MEMEOPOLY'}, {id: 'wins', label: 'Wins'}, {id: 'streak', label: 'Streak'}];
         return (
             <div className="leaderboard-panel">
                 <h3>Leaderboard</h3>
@@ -36,7 +36,7 @@ export default class Leaderboard extends React.Component {
                             <span className="lb-name">{e.username}</span>
                             <span className="lb-value">
                                 {tab === 'xp' && `Lv.${e.level} (${e.xp} XP)`}
-                                {tab === 'cpoly' && `${e.cpoly} $MEMO`}
+                                {tab === 'cpoly' && `${e.cpoly} $MEMEOPOLY`}
                                 {tab === 'wins' && `${e.wins} wins`}
                                 {tab === 'streak' && `${e.streak} days`}
                             </span>

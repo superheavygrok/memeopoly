@@ -3,27 +3,27 @@ import React from 'react';
 const STEPS = [
     {
         title: 'Welcome to Memeopoly',
-        content: 'A meme-powered multiplayer board game powered by $MEMO tokens on Solana. Roll dice, buy meme properties, and build your meme empire!',
+        content: 'A meme-powered multiplayer board game powered by $MEMEOPOLY tokens on Solana. Roll dice, buy meme properties, and build your meme empire!',
         icon: '🎲'
     },
     {
         title: 'Connect Your Wallet',
-        content: 'Click "Connect Wallet" in the top-right to link your Phantom wallet. This is required to receive $MEMO token rewards and track your on-chain earnings.',
+        content: 'Click "Connect Wallet" in the top-right to link your Phantom wallet. This is required to receive $MEMEOPOLY token rewards and track your on-chain earnings.',
         icon: '👛'
     },
     {
         title: 'How to Play',
-        content: 'Create a player, pick a token, and roll the dice. Land on properties (blockchain protocols) to buy them. Collect rent from other players who land on your properties. Pass GO to collect $200 in $MEMO.',
+        content: 'Create a player, pick a token, and roll the dice. Land on properties (blockchain protocols) to buy them. Collect rent from other players who land on your properties. Pass GO to collect $200 in $MEMEOPOLY.',
         icon: '🏠'
     },
     {
-        title: 'Earn $MEMO Tokens',
-        content: 'Every game you play earns $MEMO tokens:\n\n- Win a game: +500 $MEMO\n- Complete a full loop: +50 $MEMO\n- Own all properties of one color: +200 $MEMO\n- Daily login streak: +25 $MEMO/day',
+        title: 'Earn $MEMEOPOLY Tokens',
+        content: 'Every game you play earns $MEMEOPOLY tokens:\n\n- Win a game: +500 $MEMEOPOLY\n- Complete a full loop: +50 $MEMEOPOLY\n- Own all properties of one color: +200 $MEMEOPOLY\n- Daily login streak: +25 $MEMEOPOLY/day',
         icon: '💰'
     },
     {
         title: 'Referral Rewards',
-        content: 'Click "REFER" to get your unique referral link. Share it and earn:\n\n- 5 Referrals: +500 $MEMO\n- 10 Referrals: +1,500 $MEMO\n- 25 Referrals: +5,000 $MEMO\n\nPlus 10% of every referred player\'s earnings!',
+        content: 'Click "REFER" to get your unique referral link. Share it and earn:\n\n- 5 Referrals: +500 $MEMEOPOLY\n- 10 Referrals: +1,500 $MEMEOPOLY\n- 25 Referrals: +5,000 $MEMEOPOLY\n\nPlus 10% of every referred player\'s earnings!',
         icon: '🔗'
     },
     {
@@ -33,7 +33,7 @@ const STEPS = [
     },
     {
         title: 'Ready to Play!',
-        content: 'Join a game, invite friends with your referral link, and start building your crypto empire. The more you play, the more $MEMO you earn!',
+        content: 'Join a game, invite friends with your referral link, and start building your crypto empire. The more you play, the more $MEMEOPOLY you earn!',
         icon: '🚀'
     }
 ];

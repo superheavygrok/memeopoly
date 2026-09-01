@@ -12,11 +12,11 @@ export default class Go extends React.Component{
     }
 
     render() {
-        return (<div className={"go corner-card grid-area-0 " + this.props.boardPos} onClick={this.claimGo} title="Click to claim +50 $MEMO when you pass GO">
+        return (<div className={"go corner-card grid-area-0 " + this.props.boardPos} onClick={this.claimGo} title="Click to claim +50 $MEMEOPOLY when you pass GO">
             <div className="container">
                 <div>Collect $200 salary as you pass</div>
                 <div>GO</div>
-                <div className="cpoly-claim">+50 $MEMO</div>
+                <div className="cpoly-claim">+50 $MEMEOPOLY</div>
                 <div className="icon">
                     <FontAwesomeIcon icon={faArrowLeft}/>
                 </div>
